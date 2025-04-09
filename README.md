@@ -13,10 +13,13 @@ STEP 5:Save the data to the file.
 # FEATURE ENCODING:
 1. Ordinal Encoding
 An ordinal encoding involves mapping each unique label to an integer value. This type of encoding is really only appropriate if there is a known relationship between the categories. This relationship does exist for some of the variables in our dataset, and ideally, this should be harnessed when preparing the data.
+
 2. Label Encoding
 Label encoding is a simple and straight forward approach. This converts each value in a categorical column into a numerical value. Each value in a categorical column is called Label.
+
 3. Binary Encoding
 Binary encoding converts a category into binary digits. Each binary digit creates one feature column. If there are n unique categories, then binary encoding results in the only log(base 2)ⁿ features.
+
 4. One Hot Encoding
 We use this categorical data encoding technique when the features are nominal(do not have any order). In one hot encoding, for each level of a categorical feature, we create a new variable. Each category is mapped with a binary variable containing either 0 or 1. Here, 0 represents the absence, and 1 represents the presence of that category.
 
@@ -33,23 +36,138 @@ We use this categorical data encoding technique when the features are nominal(do
 # CODING AND OUTPUT:
   ```
 import pandas as pd
-df = pd.read_csv("/content/supermarket.csv")
+import numpy as np
+from scipy import stats
 df
 ```
-		Invoice ID	Branch	City	Customer type	Gender	Product line	Unit price	Quantity	Tax 5%	Total	Date	Time	Payment	cogs	gross margin percentage	gross income	Rating
-0	750-67-8428	A	Yangon	Member	Female	Health and beauty	74.69	7	26.1415	548.9715	1/5/2019	13:08	Ewallet	522.83	4.761905	26.1415	9.1
-1	226-31-3081	C	Naypyitaw	Normal	Female	Electronic accessories	15.28	5	3.8200	80.2200	3/8/2019	10:29	Cash	76.40	4.761905	3.8200	9.6
-2	631-41-3108	A	Yangon	Normal	Male	Home and lifestyle	46.33	7	16.2155	340.5255	3/3/2019	13:23	Credit card	324.31	4.761905	16.2155	7.4
-3	123-19-1176	A	Yangon	Member	Male	Health and beauty	58.22	8	23.2880	489.0480	1/27/2019	20:33	Ewallet	465.76	4.761905	23.2880	8.4
-4	373-73-7910	A	Yangon	Normal	Male	Sports and travel	86.31	7	30.2085	634.3785	2/8/2019	10:37	Ewallet	604.17	4.761905	30.2085	5.3
-...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...	...
-995	233-67-5758	C	Naypyitaw	Normal	Male	Health and beauty	40.35	1	2.0175	42.3675	1/29/2019	13:46	Ewallet	40.35	4.761905	2.0175	6.2
-996	303-96-2227	B	Mandalay	Normal	Female	Home and lifestyle	97.38	10	48.6900	1022.4900	3/2/2019	17:16	Ewallet	973.80	4.761905	48.6900	4.4
-997	727-02-1313	A	Yangon	Member	Male	Food and beverages	31.84	1	1.5920	33.4320	2/9/2019	13:22	Cash	31.84	4.761905	1.5920	7.7
-998	347-56-2442	A	Yangon	Normal	Male	Home and lifestyle	65.82	1	3.2910	69.1110	2/22/2019	15:33	Cash	65.82	4.761905	3.2910	4.1
-999	849-09-3807	A	Yangon	Member	Female	Fashion accessories	88.34	7	30.9190	649.2990	2/18/2019	13:28	Cash	618.38	4.761905	30.9190	6.6
-1000 rows × 17 columns
+![Screenshot 2025-03-29 113058](https://github.com/user-attachments/assets/9eff59dc-afea-4d67-ac9d-4b26793906d1)
+```
+from sklearn.preprocessing import LabelEncoder , OrdinalEncoder
+climate=['Cold','Warm','Hot','Very Hot']
+ele=OrdinalEncoder(categories=[climate])
+ele.fit_transform(df[["Ord_1"]])
+```
+![Screenshot 2025-03-29 113109](https://github.com/user-attachments/assets/1ad4b32d-210d-4e9b-974d-c25d0cbfd009)
+```
+df['bo2']=ele.fit_transform(df[['Ord_1']])
+df
+```
+![Screenshot 2025-03-29 113114](https://github.com/user-attachments/assets/d7440c0e-79eb-43a7-92c1-18503859148a)
+```
+le=LabelEncoder()
+df2=df.copy()
+df2['Ord_2']=le.fit_transform(df2['Ord_2'])
+df2
+```
+![Screenshot 2025-03-29 113120](https://github.com/user-attachments/assets/b1a9e323-2e67-4b3e-9f85-2697b078d393)
+```
+from sklearn.preprocessing import OneHotEncoder
+ohe=OneHotEncoder()
+df3=df.copy()
+enc=pd.DataFrame(ohe.fit_transform(df2[["City"]]))
+df2=pd.concat([enc,df3],axis=1)
+df2
+```
+![Screenshot 2025-03-29 113128](https://github.com/user-attachments/assets/2454c7a7-ed8e-43ea-b56f-e05cf5786063)
+```
+pd.get_dummies(df,columns=['City'])
+```
+![Screenshot 2025-03-29 113138](https://github.com/user-attachments/assets/dcef2883-860f-424e-8b05-a6164afbbcba)
+```
+from category_encoders import BinaryEncoder
+df= pd.read_csv("/content/data (1).csv")
+df
+```
+![Screenshot 2025-03-29 113144](https://github.com/user-attachments/assets/cc26571c-9ec1-4a0e-9be3-4cd47dfbc74d)
+```
+be=BinaryEncoder()
+nd=be.fit_transform(df['Ord_2'])
+df
+```
+![Screenshot 2025-03-29 113149](https://github.com/user-attachments/assets/50e47aad-422f-4d1b-be47-e1904cad5c1a)
+```
+from category_encoders import TargetEncoder
+te=TargetEncoder()
+CC=df.copy()
+new=te.fit_transform(CC["City"],y=CC["Target"])
+CC=pd.concat([CC,new],axis=1)
+CC
+```
+![Screenshot 2025-03-29 113157](https://github.com/user-attachments/assets/e077298e-0003-4ebb-ae50-e7124b19c4ee)
+```
+new = te.fit_transform(X=cc["City"],y=cc["Target"])
+cc=pd.concat([cc,new],axis=1)
+cc
+```
+![Screenshot 2025-03-29 113203](https://github.com/user-attachments/assets/9513e67d-daec-4728-b66e-152694c0b5ee)
+```
+df=pd.read_csv("/content/Data_to_Transform.csv")
+df
+```
+![Screenshot 2025-03-29 113208](https://github.com/user-attachments/assets/961a4c4c-9ea2-402e-a18f-248803fb7495)
+```
+df.skew()
+```
+![Screenshot 2025-03-29 113213](https://github.com/user-attachments/assets/cbec7676-9e58-479e-9dde-c57779eba5e8)
+```
+np.log(df["Highly Positive Skew"])
+```
+![Screenshot 2025-03-29 113220](https://github.com/user-attachments/assets/2f07f3e9-959e-47ef-abb6-0b3522dd359a)
+```
+np.reciprocal(df["Moderate Positive Skew"])
+```
+![Screenshot 2025-03-29 113226](https://github.com/user-attachments/assets/00f6de98-fc04-442b-bcde-1e7cd697268f)
+```
+np.sqrt(df["Highly Positive Skew"])
+```
+![Screenshot 2025-03-29 113231](https://github.com/user-attachments/assets/a77df248-a368-4e33-9849-6546e4927c32)
+```
+np.square(df["Highly Positive Skew"])
+```
+![Screenshot 2025-03-29 113238](https://github.com/user-attachments/assets/e8843731-7c1e-4291-896a-490ea57f61ac)
+```
+df["Highly Positive Skew_boxcox"], parameters=stats.boxcox(df["Highly Positive Skew"])
+df
+```
+![Screenshot 2025-03-29 113246](https://github.com/user-attachments/assets/1f27ab96-c959-4947-8dfe-04c530d561e3)
 
+```
+df["Moderate Negative Skew_yeojohnson"],parameters =stats.yeojohnson(df["Moderate Negative Skew"])
+df
+```
+![Screenshot 2025-03-29 113255](https://github.com/user-attachments/assets/07e6caa2-0c09-4b77-9998-1d445838a943)
+```
+from sklearn.preprocessing import QuantileTransformer
+qt=QuantileTransformer(output_distribution='normal')
+df["Moderate Negative Skew_1"]=qt.fit_transform(df[["Moderate Negative Skew"]])
+df
+```
+![Screenshot 2025-03-29 113319](https://github.com/user-attachments/assets/ec4cb17c-a6c0-4694-b218-030416ad08ad)
+```
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+import scipy.stats as stats
+sm.qqplot(df['Moderate Negative Skew'],line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113330](https://github.com/user-attachments/assets/ce7cae79-c585-4aa8-9cac-f15d24c0c9e6)
+```
+sm.qqplot(df["Moderate Negative Skew_1"],line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113335](https://github.com/user-attachments/assets/1818cfda-d751-449c-bb6b-7725ebfd0e55)
+```
+df["Highly Negative Skew_1"]=qt.fit_transform(df[["Highly Negative Skew"]])
+sm.qqplot(df['Highly Negative Skew'],line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113340](https://github.com/user-attachments/assets/b54fd06e-eff8-400c-aa46-6cf0ea1faf24)
+```
+sm.qqplot(np.reciprocal(df["Moderate Negative Skew_1"]),line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113345](https://github.com/user-attachments/assets/69a6f98e-1f3d-472f-92c6-9c20761352f7)
 
 # RESULT:
        # INCLUDE YOUR RESULT HERE
