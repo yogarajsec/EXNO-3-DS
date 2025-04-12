@@ -167,9 +167,38 @@ plt.show()
 sm.qqplot(np.reciprocal(df["Moderate Negative Skew_1"]),line='45')
 plt.show()
 ```
-![Screenshot 2025-03-29 113345](https://github.com/user-attachments/assets/69a6f98e-1f3d-472f-92c6-9c20761352f7)
+![download](https://github.com/user-attachments/assets/2a46a1b0-5aeb-41f3-8640-0c430dcd96d3)
+
+```
+sm.qqplot(df["Highly Negative Skew_1"],line='45')
+plt.show()
+```
+![download](https://github.com/user-attachments/assets/95739910-1961-435d-a1ae-899af71e0bcb)
+
+```
+sm.qqplot(np.abs(df["Highly Negative Skew_1"]),line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113355](https://github.com/user-attachments/assets/a048f447-bd83-41ea-8a8d-4538ddb985d6)
+
+```
+sm.qqplot(np.log(df["Highly Negative Skew_1"]),line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113402](https://github.com/user-attachments/assets/8b34842f-4790-4fcd-83c9-c8d989b855da)
+
+```
+sm.qqplot(np.sqrt(df["Moderate Negative Skew_1"]),line='45')
+plt.show()
+```
+![Screenshot 2025-03-29 113411](https://github.com/user-attachments/assets/de8dfd77-4347-45b7-9f05-1b34caa946c0)
+
+```
+pd.concat([cc,new],axis=1)
+```
+![Screenshot 2025-03-29 113422](https://github.com/user-attachments/assets/a295335a-68ee-43ce-8e03-656f54772e9a)
 
 # RESULT:
-       # INCLUDE YOUR RESULT HERE
+  Thus, performing Feature Encoding and Transformation process for the given data set is completed.       
 
        
